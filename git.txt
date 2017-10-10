@@ -1,0 +1,146 @@
+笔记链接：https://github.com/michaelliao/learngit
+仓库：https://github.com/michaelliao/learngit
+bootstrap项目主页https://github.com/twbs/bootstrap
+
+
+	git init                         ---创建版本库
+	git add 文件名称                 ---添加到暂存区
+	git commit  -m "备注"            ---提交文件
+	git diff HEAD -- 文件名称        ---查看工作区和版本库里面最新版本的区别
+	git status                       ---查看状态
+	cat 文件名称                     ---查看文件
+	git log                          ---查看历史记录(查看提交历史，以便确定要回退到哪个版本。)
+	git log  --pretty=oneline        ---加上单号显示
+	git reset --hard HEAD^           ---回退上一个版本(上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。)
+	git reset --hard 版本号          ---回退到指定版本
+	git reflog                       ---查看历史操作日志(命令历史，以便确定要回到未来的哪个版本。)
+	git checkout -- 文件名称         ---工作区的修改全部撤销
+	git reset HEAD 文件              ---既可以回退版本，也可以把暂存区的修改回退到工作区(用HEAD时，表示最新的版本。)
+	git rm 文件名称                      ---删除文件(命令git rm删掉，并且git commit,如果要恢复可以 git checkout..命令git rm用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。)
+【远程仓库】 [ https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/001374385852170d9c7adf13c30429b9660d0eb689dd43a000 ]
+	ssh-keygen -t rsa -C "账号邮箱"   						---创建SSH Key
+	git remote add origin 地址        						---如:[ git remote add origin git@github.com:wubodanran/dan.git ],(远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，但是origin这个名字一看就知道是远程库。)
+	git push -u origin master         						---把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。(由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令)
+    git push origin master            						---从现在起，只要本地作了提交，就可以通过命令(此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；)
+	    推送分支：如果要推送其他分支，比如分支dev，就改成：git push origin dev
+		master分支是主分支，因此要时刻与远程同步；
+		dev分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；
+		bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；
+		feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。
+	git clone git@github.com:用户名/仓库名称.git            ---克隆仓库 :[ git clone git@github.com:wubodanran/dan_kills.git ]
+	git checkout -b dev origin/dev                          ---远程库clone时，默认情况下，你的小伙伴只能看到本地的master分支，现在，你的小伙伴要在dev分支上开发，就必须创建远程origin的dev分支到本地，于是他用这个命令创建本地dev分支：
+	git pull                                                ---推送失败使用git pull把最新的提交抓下来
+【分支管理】
+	git checkout -b dev                                 ---创建分支(创建一个dev的分支，git checkout命令加上-b参数表示创建并切换)
+	相当于	$ git branch dev    --创建分支
+			$ git checkout dev  --切换分支
+	git branch               							---查看当前分支
+    git merge dev            							---和并分支(合并dev分支)
+	git branch -d dev        							---删除分支(删除dev分支)
+	git branch -D feature-vulcan                        ---强行删除分支
+	git log --graph --pretty=oneline --abbrev-commit    ---使用带参数的git log 查看合并分支情况
+	git log --graph                                     ---命令可以看到分支合并图。
+	小结
+		Git鼓励大量使用分支：
+		查看分支：git branch
+		创建分支：git branch <name>
+		切换分支：git checkout <name>
+		创建+切换分支：git checkout -b <name>
+		合并某分支到当前分支：git merge <name>
+		删除分支：git branch -d <name>
+	
+	git merge --no-ff -m "merge with --no-ff" 分支名称  --因为本次合并要创建一个新的commit，所以加上-m参数，把commit描述写进去,--no-ff参数，表示禁用Fast forward[ git merge --no-ff -m "merge with --no-ff" dev ]
+	小结
+		Git分支十分强大，在团队开发中应该充分应用。
+		合并分支时，加上--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。
+    git stash                                           ---可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作
+	
+	git remote                                          ---查看远程库的信息
+	git remote -v                                       ---显示更详细的信息
+
+【多人协作】
+	因此，多人协作的工作模式通常是这样：
+		首先，可以试图用git push origin branch-name推送自己的修改；
+		如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；
+		如果合并有冲突，则解决冲突，并在本地提交；
+		没有冲突或者解决掉冲突后，再用git push origin branch-name推送就能成功！
+		如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream branch-name origin/branch-name。
+		这就是多人协作的工作模式，一旦熟悉了，就非常简单。
+	小结
+		查看远程库信息，使用git remote -v；
+		本地新建的分支如果不推送到远程，对其他人就是不可见的；
+		从本地推送分支，使用git push origin branch-name，如果推送失败，先用git pull抓取远程的新提交；
+		在本地创建和远程分支对应的分支，使用git checkout -b branch-name origin/branch-name，本地和远程分支的名称最好一致；
+		建立本地分支和远程分支的关联，使用git branch --set-upstream branch-name origin/branch-name；
+		从远程抓取分支，使用git pull，如果有冲突，要先处理冲突。
+		
+【标签管理】在Git中打标签非常简单，首先，切换到需要打标签的分支上
+    git tag 标签名称    如：git tag v1.0                   			---打一个新标签 ，默认标签是打在最新提交的commit
+	git tag                                                			---查看所有标签
+	
+	有时候，如果忘了打标签，比如，现在已经是周五了，但应该在周一打的标签没有打，怎么办？
+	git log --pretty=oneline --abbrev-commit               			---查找历史提交的commit id
+	git tag 标签 commit_id                                			---根据ommit id打标签标签
+	git tag -a 标签 -m "说明" commit_id     						---创建带有说明的标签，用-a指定标签名，-m指定说明文字
+		如：git tag -a v0.8 -m "version 0.8" 72769a4
+	git show 标签       如：git show v1.0                  			---查看标签信息(标签不是按时间顺序列出，而是按字母排序的)：
+    git tag -s 标签 -m "说明" commit_id        						---还可以通过-s用私钥签名一个标签
+	   签名采用PGP签名，因此，必须首先安装gpg（GnuPG），如果没有找到gpg，或者没有gpg密钥对，就会报错：
+		gpg: signing failed: secret key not available
+		error: gpg failed to sign the data
+		error: unable to sign the tag
+	git tag -d 标签名称                                             ---删除标签(因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。)
+	git push origin 标签名称                                        ---推送某个标签到远程
+    git push origin --tags                                          ---一次性推送全部尚未推送到远程的本地标签
+	说明：
+	    如果标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除：
+	        git tag -d 标签名称
+		从远程删除。删除命令也是push，但是格式如下：
+		    git push origin :refs/tags/标签名称
+	
+	小结
+		命令git push origin <tagname>可以推送一个本地标签；
+		命令git push origin --tags可以推送全部未推送过的本地标签；
+		命令git tag -d <tagname>可以删除一个本地标签；
+		命令git push origin :refs/tags/<tagname>可以删除一个远程标签。
+	
+【码云】
+    git remote rm 库名称        --- 删除已关联的库
+	如：先删除已关联的名为origin
+	    git remote rm origin
+	
+	关联GitHub的远程库：
+		git remote add github git@github.com:wubodanran/learngit.git
+    注意，远程库的名称叫github，不叫origin了。
+	关联码云的远程库
+	   git remote add gitee git@gitee.com:wubodanran/learngit.git
+	同样注意，远程库的名称叫gitee，不叫origin。
+	
+	如果要推送到GitHub，使用命令：
+		git push github master
+	如果要推送到码云，使用命令：
+		git push gitee master
+		
+【自定义git】
+    git config --global color.ui true   ------让Git显示颜色，会让命令输出看起来更醒目：
+
+
+
+	
+	
+
+	  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
