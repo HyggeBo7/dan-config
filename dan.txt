@@ -12,3 +12,5 @@
 			创建 dev分支  Creating a new branch is quick. dev & simple
 			创建fe分支 哒哒哒
 
+分支管理策略
+  
